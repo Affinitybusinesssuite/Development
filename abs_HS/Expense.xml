@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--    &lt;!&ndash;    tree view of expense &ndash;&gt;-->
+<!--    <record id="tree_expense" model="ir.ui.view">-->
+<!--            <field name="name">expense.tree</field>-->
+<!--            <field name="model">import.expenses</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree string="Expense">-->
+<!--                    <field name="expense_name"/>-->
+<!--                    <field name="expense_type"/>-->
+<!--                    <field name="expense_value"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--    </record>-->
+
+    <!--    form view of expense -->
+<!--    <record id="form_expense" model="ir.ui.view">-->
+<!--            <field name="name">expense.form</field>-->
+<!--            <field name="model">import.expenses</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="Expense">-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <group>-->
+<!--                                <field name="expense_name" required="True"/>-->
+<!--                                <field name="expense_type"/>-->
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                <field name="expense_value"/>-->
+<!--                            </group>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+    <!--    action of expense menu-->
+<!--    <record id="action_expense" model="ir.actions.act_window">-->
+<!--            <field name="name">Expenses</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">import.expenses</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="help" type="html">-->
+<!--              <p class="o_view_nocontent_smiling_face">-->
+<!--                Create a new import Expense !-->
+<!--              </p>-->
+<!--            </field>-->
+<!--    </record>-->
+
+    <!--    inherit view of product -->
+    <record id="product_template_inherit" model="ir.ui.view">
+        <field name="name">product.template.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <field name="barcode" position="after">
+                <field name="hsNumber"/>
+            </field>
+        </field>
+    </record>
+
+    <!--    inherit view of purchase.order.line -->
+    <record id="purchase_line_inherit" model="ir.ui.view">
+        <field name="name">purchase.line.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="after">
+                <field name="hsNumber"/>
+                <field name="amount"/>
+            </xpath>
+        </field>
+    </record>
+
+        <!--    tree view of expense -->
+    <record id="tree_code" model="ir.ui.view">
+            <field name="name">expense.tree</field>
+            <field name="model">import.code</field>
+            <field name="arch" type="xml">
+                <tree string="HS Code">
+                    <field name="code_name"/>
+<!--                    <field name="expense_value"/>-->
+                </tree>
+            </field>
+    </record>
+
+<!--    form view of code -->
+    <record id="form_code" model="ir.ui.view">
+            <field name="name">Code</field>
+            <field name="model">import.code</field>
+            <field name="arch" type="xml">
+                <form string="Code">
+                   <sheet>
+                       <group>
+                           <field name="code_name" required="True"/>
+                       </group>
+                       <notebook>
+                               <page string="Expenses">
+                                   <field name="code_expenses">
+                                     <tree editable="bottom">
+                                         <field name="import_product_id" domain = "[('landed_cost_ok','=',True)]"/>
+                                         <field name="expense_type"/>
+                                         <field name="expense_value"/>
+                                         <field name="expense_amount" readonly="True"/>
+                                     </tree>
+                                    </field>
+                               </page>
+                       </notebook>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+
+        <!--    action of code menu-->
+    <record id="action_code" model="ir.actions.act_window">
+            <field name="name">HS Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">import.code</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new HS Code !
+              </p>
+            </field>
+    </record>
+
+    <menuitem id="abs_HS" name="Import" sequence="0"></menuitem>
+    <menuitem id="Expense" name="Expenses" parent="abs_HS" action="action_code"></menuitem>
+
+</odoo>
